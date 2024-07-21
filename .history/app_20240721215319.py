@@ -12,6 +12,9 @@ from langchain.prompts import PromptTemplate
 # Load the environment variables
 load_dotenv()
 
+# Configure the Generative AI with the API key from the environment variable
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
 def get_pdf_text(pdf_docs):
     text = ""
     for pdf in pdf_docs:
@@ -63,32 +66,21 @@ def user_input(user_question):
 def main():
     st.set_page_config(page_title="Chat with multiple PDF")
     st.header("Chat with multiple PDF")
-
-    api_key = st.text_input("Enter your personal API key:", type="password")
-    submit_api = st.button("Submit Key")
-
-    if submit_api and not api_key:
-        st.warning("Please enter your personal API key to proceed.")
-        st.stop()
     
-    if api_key:
-        genai.configure(api_key=api_key)
+    user_question = st.text_input("Ask a Question from the PDF Files")
+    
+    if user_question:
+        user_input(user_question)
         
-        user_question = st.text_input("Ask a Question from the PDF Files")
-        submit_question = st.button("Ask")
-        
-        if submit_question:
-            user_input(user_question)
-            
-        with st.sidebar:
-            st.title("Menu:")
-            pdf_docs = st.file_uploader("Upload your PDF Files", type=["pdf"], accept_multiple_files=True)
-            if st.button("Submit & Process"):
-                with st.spinner("Processing..."):
-                    raw_text = get_pdf_text(pdf_docs)
-                    text_chunks = get_text_chunks(raw_text)
-                    get_vector_store(text_chunks)
-                    st.success("Done")
+    with st.sidebar:
+        st.title("Menu:")
+        pdf_docs = st.file_uploader("Upload your PDF Files", type=["pdf"], accept_multiple_files=True)
+        if st.button("Submit & Process"):
+            with st.spinner("Processing..."):
+                raw_text = get_pdf_text(pdf_docs)
+                text_chunks = get_text_chunks(raw_text)
+                get_vector_store(text_chunks)
+                st.success("Done")
 
 if __name__ == "__main__":
     main()

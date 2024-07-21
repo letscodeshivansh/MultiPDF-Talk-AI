@@ -12,6 +12,9 @@ from langchain.prompts import PromptTemplate
 # Load the environment variables
 load_dotenv()
 
+# Configure the Generative AI with the API key from the environment variable
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
 def get_pdf_text(pdf_docs):
     text = ""
     for pdf in pdf_docs:
@@ -78,7 +81,7 @@ def main():
         submit_question = st.button("Ask")
         
         if submit_question:
-            user_input(user_question)
+            user_input(user_question, api_key)
             
         with st.sidebar:
             st.title("Menu:")
@@ -87,7 +90,7 @@ def main():
                 with st.spinner("Processing..."):
                     raw_text = get_pdf_text(pdf_docs)
                     text_chunks = get_text_chunks(raw_text)
-                    get_vector_store(text_chunks)
+                    get_vector_store(text_chunks, api_key)
                     st.success("Done")
 
 if __name__ == "__main__":
