@@ -9,6 +9,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
+import traceback
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -37,6 +38,7 @@ def get_vector_store(text_chunks):
         vector_store.save_local("faiss_index")
     except Exception as e:
         logging.error(f"Error creating vector store: {e}")
+        logging.error(traceback.format_exc())
         raise
 
 def get_conversational_chain():
@@ -69,6 +71,7 @@ def user_input(user_question):
         st.write("Reply: ", response["output_text"])
     except Exception as e:
         logging.error(f"Error processing user input: {e}")
+        logging.error(traceback.format_exc())
         st.error(f"An error occurred: {e}")
 
 def main():
@@ -104,6 +107,7 @@ def main():
                         st.success("Done")
                     except Exception as e:
                         logging.error(f"Error processing PDF files: {e}")
+                        logging.error(traceback.format_exc())
                         st.error(f"An error occurred while processing the files: {e}")
 
 if __name__ == "__main__":
