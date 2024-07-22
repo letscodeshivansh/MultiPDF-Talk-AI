@@ -14,7 +14,7 @@ import traceback
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
-# Load the environment variables
+# Load the environment variables (for local development)
 load_dotenv()
 
 def get_pdf_text(pdf_docs):
@@ -32,7 +32,6 @@ def get_text_chunks(text):
 
 def get_vector_store(text_chunks):
     try:
-        # Ensure the correct model name format for embeddings
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
         vector_store.save_local("faiss_index")
@@ -86,7 +85,7 @@ def main():
         st.stop()
     
     if api_key:
-        os.environ['GOOGLE_API_KEY'] = api_key  # Set the API key as an environment variable
+        os.environ['GOOGLE_API_KEY'] = api_key  # Set the API key as an environment variable for local development
         genai.configure(api_key=api_key)
         
         user_question = st.text_input("Ask a Question from the PDF Files")
