@@ -83,7 +83,6 @@ def main():
         st.stop()
     
     if api_key:
-        os.environ['GOOGLE_API_KEY'] = api_key  # Set the API key as an environment variable
         genai.configure(api_key=api_key)
         
         user_question = st.text_input("Ask a Question from the PDF Files")
